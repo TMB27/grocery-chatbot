@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Bot</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <h2>🛒 Grocery Chatbot</h2>
+    <div id="chatbox" class="chatbox"></div>
+
+    <div class="input-container">
+      <input type="text" id="message" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const msg = document.getElementById('message').value;
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: msg})
+      });
+      const data = await res.json();
+      const chatbox = document.getElementById('chatbox');
+      chatbox.innerHTML += `<div class="user-message"><b>You:</b> ${msg}</div>`;
+      chatbox.innerHTML += `<div class="bot-message"><b>Bot:</b> ${data.reply}</div>`;
+      document.getElementById('message').value = "";
+      chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to the bottom
+    }
+  </script>
+</body>
+</html>
